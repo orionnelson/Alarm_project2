@@ -13,6 +13,8 @@
 #include <pthread.h>
 #include <time.h>
 #include "errors.h"
+#include <regex.h>
+
 
 /*
  * The "alarm" structure now contains the time_t (time since the
@@ -25,7 +27,7 @@ typedef struct alarm_tag {
     struct alarm_tag    *link;
     int                 seconds;
     time_t              time;   /* seconds from EPOCH */
-    char                message[64];
+    char                message[128];
 } alarm_t;
 
 pthread_mutex_t alarm_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -43,7 +45,7 @@ void alarm_insert (alarm_t *alarm)
 
     /*
      * LOCKING PROTOCOL:
-     * 
+     *
      * This routine requires that the caller have locked the
      * alarm_mutex!
      */
@@ -158,6 +160,10 @@ int main (int argc, char *argv[])
     char line[128];
     alarm_t *alarm;
     pthread_t thread;
+    regex_t regexF1;
+    regex_t regexF2;
+    int format1;
+    int format2;
 
     status = pthread_create (
         &thread, NULL, alarm_thread, NULL);
@@ -167,16 +173,41 @@ int main (int argc, char *argv[])
         printf ("Alarm> ");
         if (fgets (line, sizeof (line), stdin) == NULL) exit (0);
         if (strlen (line) <= 1) continue;
+        if (strlen (line) > 128)
+            fprintf(stderr, "ERROR: 128 char limit!");
         alarm = (alarm_t*)malloc (sizeof (alarm_t));
         if (alarm == NULL)
             errno_abort ("Allocate alarm");
+
+        //checking format using regex
+        format1 = regcomp(&regexF1, "format1Regex", 0);
+        format2 = regcomp(&regexF2, "format2Regex ", 0);
+        if (format1 || format2) {
+            fprintf(stderr, "Could not compile regex\n");
+            exit(1);
+        }
+
+        format1 = regexec(&regexF1, line, 0, NULL, 0);
+        format2 = regexec(&regexF2, line, 0, NULL, 0);
+
+        if (!format1) {
+            puts("Match format1");
+        }
+        if (!format2) {
+            puts("Match format2");
+        }
+        else if (format1 == REG_NOMATCH && format2 == REG_NOMATCH) {
+            puts("No match");
+        }
+        regfree(&regexF1);
+        regfree(&regexF2);
 
         /*
          * Parse input line into seconds (%d) and a message
          * (%64[^\n]), consisting of up to 64 characters
          * separated from the seconds by whitespace.
          */
-        if (sscanf (line, "%d %64[^\n]", 
+        if (sscanf (line, "%d %64[^\n]",
             &alarm->seconds, alarm->message) < 2) {
             fprintf (stderr, "Bad command\n");
             free (alarm);
