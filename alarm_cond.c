@@ -35,6 +35,45 @@ pthread_cond_t alarm_cond = PTHREAD_COND_INITIALIZER;
 alarm_t *alarm_list = NULL;
 time_t current_alarm = 0;
 
+
+typedef struct circular_buffer
+{
+    void *buffer;     // data buffer
+    void *buffer_end; // end of data buffer
+    size_t count;     // number of items in the buffer
+    void *head;       // pointer to head
+    void *tail;       // pointer to tail
+} circular_buffer;
+
+
+void cb_add_element(circular_buffer *cb, const void *element)
+{
+    if(cb->count == 4){ 
+        printf("Buffer is full");
+    }
+    else{
+        memcpy(cb->head, element, sizeof(int)); //insert element into head
+        cb->head = (char*)cb->head + sizeof(int); //move head to next
+        if(cb->head == cb->buffer_end) //if head is at end, move to front
+        cb->head = cb->buffer;
+        cb->count++; //increment element count
+    }
+    
+}
+
+void cb_take_element(circular_buffer *cb, void *element)
+{
+    if(cb->count == 0){
+        printf("Buffer is empty");
+    }
+
+    memcpy(element, cb->tail, sizeof(int)); //set element to element at tail
+    cb->tail = (char*)cb->tail + sizeof(int); //move tail to next 
+    if(cb->tail == cb->buffer_end) //if tail is at end of buffer move to front
+        cb->tail = cb->buffer;
+    cb->count--;    //decrement element count
+}
+
 /*
  * Insert alarm entry on list, in order.
  */
@@ -100,6 +139,14 @@ void *alarm_thread (void *arg)
     time_t now;
     int status, expired;
 
+    //initializing buffer
+    circular_buffer *cb;
+    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
+    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
+    cb->count = 0; //number of current elements in buffer
+    cb->head = cb->buffer; 
+    cb->tail = cb->buffer;
+    
     /*
      * Loop forever, processing commands. The alarm thread will
      * be disintegrated when the process exits. Lock the mutex
