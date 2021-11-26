@@ -227,8 +227,8 @@ int main (int argc, char *argv[])
             errno_abort ("Allocate alarm");
 
         //checking format using regex
-        format1 = regcomp(&regexF1, "format1Regex", 0);
-        format2 = regcomp(&regexF2, "format2Regex ", 0);
+        format1 = regcomp(&regexF1, "^\d+ Message\(\d+\) [A-z0-9\! ]+$", 0);
+        format2 = regcomp(&regexF2, "^Cancel: Message\(\d+\)$", 0);
         if (format1 || format2) {
             fprintf(stderr, "Could not compile regex\n");
             exit(1);
