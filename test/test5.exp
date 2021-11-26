@@ -1,0 +1,20 @@
+alarm> Main Thread Received Alarm Request Number: (1) Alarm Request: <7 Seconds> 
+alarm> Main Thread Received Alarm Request Number: (2) Alarm Request: <777's> 
+alarm> Main Thread Received Alarm Request Number: (3) Alarm Request: <Casino> 
+Bad command
+alarm> alarm> Main Thread Received Alarm Request Number: (4) Alarm Request: <Winners> 
+alarm> Alarm Thread Passed on Alarm Request to Display Thread 2 Alarm Request Number: (2) Alarm Request: 777's 
+Display Thread 2: Recieved Alarm Request Number:(2) Alarm Request: <777's> 
+Display Thread 2: Number of SecondsLeft <6>: Alarm Request Number: (2) Alarm Request: <777's> 
+Display Thread 2: Number of SecondsLeft <4>: Alarm Request Number: (2) Alarm Request: <777's> 
+Display Thread 2: Number of SecondsLeft <2>: Alarm Request Number: (2) Alarm Request: <777's> 
+Display Thread 2: Alarm Expired at 1637032248: Alarm Request Number: (2) Alarm Request 777's 
+Alarm Thread Passed on Alarm Request to Display Thread 1 Alarm Request Number: (1) Alarm Request: 7 Seconds 
+ Display Thread 1: Recieved Alarm Request Number:(1) Alarm Request: <7 Seconds> 
+Display Thread 1: Alarm Expired at 1637032248: Alarm Request Number: (1) Alarm Request 7 Seconds 
+Alarm Thread Passed on Alarm Request to Display Thread 1 Alarm Request Number: (3) Alarm Request: Casino 
+ Display Thread 1: Recieved Alarm Request Number:(3) Alarm Request: <Casino> 
+Display Thread 1: Alarm Expired at 1637032249: Alarm Request Number: (3) Alarm Request Casino 
+Alarm Thread Passed on Alarm Request to Display Thread 2 Alarm Request Number: (4) Alarm Request: Winners 
+Display Thread 2: Recieved Alarm Request Number:(4) Alarm Request: <Winners> 
+Display Thread 2: Alarm Expired at 1637032250: Alarm Request Number: (4) Alarm Request Winners
