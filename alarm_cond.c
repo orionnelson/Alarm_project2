@@ -356,6 +356,7 @@ void *periodic_display_thread (void *arg)
 		read_count--;
 		if (read_count == 0)
 		{
+		    fflush(stdout);
 		    status = pthread_mutex_unlock (&rw_mutex);
 	        if (status != 0)
 	            err_abort (status, "Unlock mutex");
