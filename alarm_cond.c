@@ -356,6 +356,7 @@ void *periodic_display_thread (void *arg)
 		read_count--;
 		if (read_count == 0)
 		{
+		    fflush(stdout);
 		    status = pthread_mutex_unlock (&rw_mutex);
 	        if (status != 0)
 	            err_abort (status, "Unlock mutex");
@@ -503,7 +504,8 @@ int main (int argc, char *argv[])
     char line[128];
     alarm_t *alarm;
     pthread_t thread;
-    int flag; /* 
+    int i = 0;
+    int flag;/* 
 	       * flag = 1 if input was parsed correctly as either type A or B
   	       * alarm. flag = 0 otherwise.
 	       */
@@ -535,8 +537,14 @@ int main (int argc, char *argv[])
     while (1) 
     {
 		flag = 1;
-        printf ("Alarm> ");
+        fprintf (stdout,"Alarm> ");
+	 int sz = argc;
+        if (sz > 1 && sz > (i+1)){
+        strcpy(line,argv[i+1]);
+        i++;
+        }else{
         if (fgets (line, sizeof (line), stdin) == NULL) exit (0);
+        }
         if (strlen (line) <= 1) continue;
         alarm = (alarm_t*)malloc (sizeof (alarm_t));
         if (alarm == NULL)
