@@ -18,7 +18,7 @@ typedef struct circular_buffer
 void cb_add_element(circular_buffer *cb, const void *element)
 {
     if(cb->count == 4){ 
-        printf("Buffer is full");
+        fprintf(stdout,"Buffer is full");
     }
     else{
         memcpy(cb->head, element, sizeof(int)); //insert element into head
@@ -33,7 +33,7 @@ void cb_add_element(circular_buffer *cb, const void *element)
 void cb_take_element(circular_buffer *cb, void *element)
 {
     if(cb->count == 0){
-        printf("Buffer is empty");
+        fprintf(stdout,"Buffer is empty");
     }
 
     memcpy(element, cb->tail, sizeof(int)); //set element to element at tail
@@ -164,10 +164,10 @@ void printAlarmList()
     next = head;
     while (next != NULL) 
     {
-		printf("%d, ", next->alarmNum);
+		fprintf(stdout,"%d, ", next->alarmNum);
 		next = next->link;
     }
-    printf("\n");
+    fprintf(stdout,"\n");
 }
 
 /* Part of the MAIN thread.
@@ -195,7 +195,7 @@ void alarm_insert (alarm_t *alarm)
 		flagA = searchAlarmA(alarm);
 		if(flagA) 
 		{
-		    printf("Replacement Alarm Request With Message Number (%d) " 	
+		    fprintf(stdout,"Replacement Alarm Request With Message Number (%d) " 	
 		           "Received at %d: %d Message(%d) %s\n",
 			   alarm->alarmNum, time(NULL), alarm->seconds, 
 			   alarm->alarmNum, alarm->message);
@@ -203,7 +203,7 @@ void alarm_insert (alarm_t *alarm)
 		}
 		if (!flagA)
 		{
-		    printf("First Alarm Request With Message Number (%d) " 	
+		    fprintf(stdout,"First Alarm Request With Message Number (%d) " 	
 		           "Received at %d: %d Message(%d) %s\n",
 			   alarm->alarmNum, time(NULL), alarm->seconds,
 		           alarm->alarmNum, alarm->message);
@@ -233,18 +233,18 @@ void alarm_insert (alarm_t *alarm)
     else
     {
 		flagA = searchAlarmA(alarm);
-		if(!flagA) printf("Error: No Alarm Request With Message Number (%d) " 	
+		if(!flagA) fprintf(stdout,"Error: No Alarm Request With Message Number (%d) " 	
 		          "to Cancel!\n",alarm->alarmNum);
 		if(flagA)
 		{
 		    flagB=searchAlarmB(alarm);
 		    if(flagB) 
-				printf("Error: More Than One Request to Cancel "
+				fprintf(stdout,"Error: More Than One Request to Cancel "
 			       "Alarm Request With Message Number (%d)!\n"
 			       ,alarm->alarmNum);
 		    else
 		    {
-				printf("Cancel Alarm Request With Message Number (%d) " 	
+				fprintf(stdout,"Cancel Alarm Request With Message Number (%d) " 	
 				       "Received at %d: Cancel: Message(%d)\n",
 						alarm->alarmNum, time(NULL),alarm->alarmNum);
 				previous = head;
@@ -305,7 +305,7 @@ void *periodic_display_thread (void *arg)
 		sleeptime = alarm->seconds;
 		if(alarm->linked == 0)
 		{
-		    printf("Display thread exiting at %d: %d Message(%d) %s\n",
+		    fprintf(stdout,"Display thread exiting at %d: %d Message(%d) %s\n",
 			time(NULL), alarm->seconds, alarm->alarmNum,
 			alarm->message);
 
@@ -328,20 +328,20 @@ void *periodic_display_thread (void *arg)
 		    return NULL;
 		}
 		if (alarm->modified == 0)
-		    printf("Alarm With Message Number (%d) Displayed at %d: "
+		    fprintf(stdout,"Alarm With Message Number (%d) Displayed at %d: "
 			"%d Message(%d) %s\n",
 			alarm->alarmNum, time(NULL), alarm->seconds, alarm->alarmNum,
 			alarm->message);
 		if (alarm->modified == 1 && flag)
 		{
-		    printf("Replacement Alarm With Message Number (%d) Displayed at "
+		    fprintf(stdout,"Replacement Alarm With Message Number (%d) Displayed at "
 			   "%d: %d Message(%d) %s\n",
 			alarm->alarmNum, time(NULL), alarm->seconds, alarm->alarmNum,
 			alarm->message);
 		}
 		if (alarm->modified == 1 && !flag)
 		{
-		    printf("Alarm With Message Number (%d) Replaced at %d: "
+		    fprintf(stdout,"Alarm With Message Number (%d) Replaced at %d: "
 			"%d Message(%d) %s\n",
 			alarm->alarmNum, time(NULL), alarm->seconds, alarm->alarmNum,
 			alarm->message);
@@ -386,13 +386,6 @@ void *alarm_thread (void *arg)
     int status, alarmToDelete;
     pthread_t thread;
 
-	//initializing buffer
-	circular_buffer *cb = &cbuffer;
-    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
-    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
-    cb->count = 0; //number of current elements in buffer
-    cb->head = cb->buffer; 
-    cb->tail = cb->buffer;
 
     while (1) 
     {
@@ -427,7 +420,7 @@ void *alarm_thread (void *arg)
 		}
 		if (alarm != NULL && alarm->type == 1)
 		{
-		    printf("Alarm Request With Message Number (%d) Proccessed at %d: "
+		    fprintf(stdout,"Alarm Request With Message Number (%d) Proccessed at %d: "
 			"%d Message(%d) %s\n",
 			alarm->alarmNum, time(NULL), alarm->seconds, alarm->alarmNum,
 			alarm->message);
@@ -487,7 +480,7 @@ void *alarm_thread (void *arg)
 				previous = next;
 		        next = next->link;
 		     }
-		    printf("Alarm Request With Message Number(%d) Proccessed at %d: "
+		    fprintf(stdout,"Alarm Request With Message Number(%d) Proccessed at %d: "
 			"Cancel: Message(%d)\n",
 			alarm->alarmNum, time(NULL),alarm->alarmNum);
 		    status = pthread_mutex_unlock (&rw_mutex);
@@ -514,6 +507,14 @@ int main (int argc, char *argv[])
 	       * flag = 1 if input was parsed correctly as either type A or B
   	       * alarm. flag = 0 otherwise.
 	       */
+
+    //initializing buffer
+	circular_buffer *cb;
+    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
+    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
+    cb->count = 0; //number of current elements in buffer
+    cb->head = cb->buffer; //set head to beginning of buffer
+    cb->tail = cb->buffer; //set tail to beginning of buffer
 
     /* 
      * Initializing the dummy variables of the alarm list.
