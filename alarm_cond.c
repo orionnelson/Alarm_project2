@@ -511,7 +511,8 @@ int main (int argc, char *argv[])
     char line[128];
     alarm_t *alarm;
     pthread_t thread;
-    int flag; /* 
+    int i = 0;
+    int flag;/* 
 	       * flag = 1 if input was parsed correctly as either type A or B
   	       * alarm. flag = 0 otherwise.
 	       */
