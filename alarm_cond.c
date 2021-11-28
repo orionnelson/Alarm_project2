@@ -386,13 +386,7 @@ void *alarm_thread (void *arg)
     int status, alarmToDelete;
     pthread_t thread;
 
-	//initializing buffer
-    circular_buffer *cb;
-    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
-    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
-    cb->count = 0; //number of current elements in buffer
-    cb->head = cb->buffer; 
-    cb->tail = cb->buffer;
+
     
     while (1) 
     {
