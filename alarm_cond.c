@@ -387,13 +387,6 @@ void *alarm_thread (void *arg)
     int status, alarmToDelete;
     pthread_t thread;
 
-	//initializing buffer
-	circular_buffer *cb = &cbuffer;
-    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
-    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
-    cb->count = 0; //number of current elements in buffer
-    cb->head = cb->buffer; 
-    cb->tail = cb->buffer;
 
     while (1) 
     {
@@ -516,6 +509,14 @@ int main (int argc, char *argv[])
 	       * flag = 1 if input was parsed correctly as either type A or B
   	       * alarm. flag = 0 otherwise.
 	       */
+
+    //initializing buffer
+	circular_buffer *cb;
+    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
+    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
+    cb->count = 0; //number of current elements in buffer
+    cb->head = cb->buffer; //set head to beginning of buffer
+    cb->tail = cb->buffer; //set tail to beginning of buffer
 
     /* 
      * Initializing the dummy variables of the alarm list.
