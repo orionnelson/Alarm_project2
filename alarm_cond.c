@@ -536,7 +536,13 @@ int main (int argc, char *argv[])
     {
 		flag = 1;
         fprintf (stdout,"Alarm> ");
+	 int sz = argc;
+        if (sz > 1 && sz > (i+1)){
+        strcpy(line,argv[i+1]);
+        i++;
+        }else{
         if (fgets (line, sizeof (line), stdin) == NULL) exit (0);
+        }
         if (strlen (line) <= 1) continue;
         alarm = (alarm_t*)malloc (sizeof (alarm_t));
         if (alarm == NULL)
