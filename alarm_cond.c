@@ -13,7 +13,7 @@ typedef struct circular_buffer
     void *head;       // pointer to head
     void *tail;       // pointer to tail
 } circular_buffer;
-
+  circular_buffer cbuffer;
 
 void cb_add_element(circular_buffer *cb, const void *element)
 {
@@ -386,8 +386,14 @@ void *alarm_thread (void *arg)
     int status, alarmToDelete;
     pthread_t thread;
 
+	//initializing buffer
+	circular_buffer *cb = &cbuffer;
+    cb->buffer = malloc(4 * sizeof(int)); // allocate memory for 4 integers
+    cb->buffer_end = (char *)cb->buffer + 4 * sizeof(int); //pointer to end of buffer
+    cb->count = 0; //number of current elements in buffer
+    cb->head = cb->buffer; 
+    cb->tail = cb->buffer;
 
-    
     while (1) 
     {
 		/* Reader locking setup */
