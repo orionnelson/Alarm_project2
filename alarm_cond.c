@@ -553,7 +553,7 @@ int main (int argc, char *argv[])
 	 * message (%64[^\n]), consisting of up to 64 characters
          * separated from the seconds by whitespace.
          */
-        if (sscanf (line, "%d Message(%d): %64[^\n]", 
+        if (sscanf (line, "%d Message(%d) %64[^\n]", 
             &alarm->seconds, &alarm->alarmNum, alarm->message) < 3) 
 	    /*
              * Parse input line into a message number (%d)
