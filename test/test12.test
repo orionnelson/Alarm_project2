@@ -1,5 +1,6 @@
-5 Message(1): should not be cancelled
+5 Message(1): should not be cancelled until last
 Cancel Message(1)
 5 Cancel: Message(1)
 Cancel: 1
 Cancel (1)
+Cancel: Message(1)
