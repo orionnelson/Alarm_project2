@@ -11,6 +11,6 @@
    These commands will perform the tasks mentioned inside the assignment rubric.
 
    ALARM> <time> Message(<alarm ID>) <message>
-   ALARM> Cancel(<alarm ID>): Message(<alarm ID>)
+   ALARM> Cancel: Message(<alarm ID>)
 
   (To exit from the program, type Ctrl-d.)
