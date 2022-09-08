@@ -13,4 +13,4 @@
    ALARM> <time> Message(<alarm ID>) <message>
    ALARM> Cancel: Message(<alarm ID>)
 
-  (To exit from the program, type Ctrl-d.)
+  (To exit from the program, type Ctrl-d.) 
